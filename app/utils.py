@@ -3,7 +3,7 @@ import hashlib
 import sys
 from datetime import datetime
 from pathlib import Path
-
+from app.specs import MAX_RESPONSE_TOKENS
 import yaml
 
 today = datetime.now().strftime("%B %d, %Y")
@@ -20,57 +20,27 @@ def combine_prompt(registry_meta, agent_config):
     Returns:
         str: Combined prompt string
     """
-    MAX_RESPONSE_TOKENS = getattr(
-        sys.modules.get("app.specs", None),
-        "MAX_RESPONSE_TOKENS",
-        150,
-    )
-
     # Start building the combined prompt
-    prompt_parts = []
+    the_prompt = []
+
+    # Add the main system prompt
+    system_prompt = agent_config["system_prompt"]
+    the_prompt.append(system_prompt)
 
     # Add registry meta prompt and patterns
     if registry_meta:
         if "prompt" in registry_meta:
-            prompt_parts.append(registry_meta["prompt"])
+            the_prompt.append(registry_meta["prompt"])
 
         if "patterns" in registry_meta:
-            for pattern in registry_meta["patterns"]:
-                # Format patterns with available variables, handle formatting errors
-                try:
-                    formatted_pattern = pattern.format(
-                        today=today, MAX_RESPONSE_TOKENS=MAX_RESPONSE_TOKENS
-                    )
-                    prompt_parts.append(formatted_pattern)
-                except (ValueError, KeyError):
-                    # If formatting fails, use pattern as-is
-                    prompt_parts.append(pattern)
-
-    # Add agent-specific meta prompt
-    agent_meta_prompt = agent_config.get("meta_prompt", "")
-    if agent_meta_prompt:
-        prompt_parts.append(agent_meta_prompt)
-
-    # Add agent-specific patterns
-    agent_patterns = agent_config.get("patterns", [])
-    if agent_patterns:
-        patterns_text = "Patterns to follow:\n" + "\n".join(
-            f"- {pattern}" for pattern in agent_patterns
-        )
-        prompt_parts.append(patterns_text)
-
-    # Add the main system prompt
-    system_prompt = agent_config.get("system_prompt", "")
-    # Handle malformed keys like 'system_prompt"'
-    if not system_prompt and 'system_prompt"' in agent_config:
-        system_prompt = agent_config['system_prompt"']
-
-    if system_prompt:
-        prompt_parts.append(system_prompt)
+            # Format patterns with available variables, handle formatting errors
+            formatted_pattern = registry_meta["patterns"].format(
+                TODAY=today, MAX_RESPONSE_TOKENS=MAX_RESPONSE_TOKENS
+            )
+            the_prompt.append(formatted_pattern)
 
     # Join all parts with double newlines
-    combined_prompt = "\n\n".join(part for part in prompt_parts if part.strip())
-
+    combined_prompt = "".join(the_prompt)
     return combined_prompt
 
 
