@@ -1,0 +1,141 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>WebSocket Messages</title>
+        <link rel="stylesheet" href="/static/style.css" />
+        <link
+            rel="stylesheet"
+            href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
+        />
+    </head>
+    <body>
+        <div class="message-container">
+            <div class="status" id="status">Connecting...</div>
+            <div id="messages"></div>
+            <div class="input-container">
+                <input
+                    type="text"
+                    id="messageInput"
+                    placeholder="Type your message..."
+                />
+                <button id="sendButton">
+                    <i class="fas fa-paper-plane"></i>
+                </button>
+            </div>
+        </div>
+
+        <script>
+            const messagesDiv = document.getElementById("messages");
+            const statusDiv = document.getElementById("status");
+            const messageInput = document.getElementById("messageInput");
+            const sendButton = document.getElementById("sendButton");
+            let ws = null;
+            let currentStreamMessage = null;
+
+            function connect() {
+                ws = new WebSocket(`ws://${window.location.host}/ws`);
+
+                ws.onopen = () => {
+                    statusDiv.textContent = "Connected";
+                    statusDiv.style.color = "green";
+                };
+
+                ws.onclose = () => {
+                    statusDiv.textContent = "Disconnected - Reconnecting...";
+                    statusDiv.style.color = "red";
+                    setTimeout(connect, 1000);
+                };
+
+                ws.onmessage = (event) => {
+                    try {
+                        const data = JSON.parse(event.data);
+                        if (data.type === "stream") {
+                            if (
+                                !currentStreamMessage ||
+                                currentStreamMessage.sender !== data.sender
+                            ) {
+                                currentStreamMessage = {
+                                    sender: data.sender,
+                                    content: "",
+                                };
+                                messagesDiv.innerHTML += `<div class="message ${data.type}" style="background-color: ${data.color};" id="current-stream"><div class="sender">${data.sender}</div><div class="content"></div></div>`;
+                            }
+                            document.querySelector(
+                                "#current-stream .content",
+                            ).textContent += data.content;
+                        } else {
+                            console.log(data);
+                            const messageClass =
+                                data.sender == "Agent Rebel"
+                                    ? "main"
+                                    : "random";
+                            messagesDiv.innerHTML += `<div class="${data.type} ${messageClass}" style="background-color: ${data.color};"><div class="sender">${data.sender}</div><div class="content">${data.content}</div></div>`;
+                        }
+
+                        // Scroll to the bottom
+                        messagesDiv.scrollTop = messagesDiv.scrollHeight;
+                    } catch {
+                        messagesDiv.innerHTML += `<div class="message system"><div class="sender">System</div><div class="content">${event.data}</div></div>`;
+                        messagesDiv.scrollTop = messagesDiv.scrollHeight;
+                    }
+                };
+            }
+
+            function sendMessage() {
+                const message = messageInput.value.trim();
+
+                if (message && ws && ws.readyState === WebSocket.OPEN) {
+                    // Send message via WebSocket
+                    ws.send(
+                        JSON.stringify({
+                            type: "message",
+                            content: message,
+                            sender: "Agent Rebel",
+                            role: "user",
+                        }),
+                    );
+
+                    messageInput.value = "";
+                    currentStreamMessage = null;
+
+                    // Create a new message bubble
+                    // currentStreamMessage = document.createElement("div");
+                    // currentStreamMessage.className = "message main";
+                    // const sender = document.createElement("div");
+                    // sender.className = "sender";
+                    // sender.textContent = "You";
+                    // const content = document.createElement("div");
+                    // content.className = "content";
+                    // currentStreamMessage.appendChild(sender);
+                    // currentStreamMessage.appendChild(content);
+                    // messagesDiv.appendChild(currentStreamMessage);
+
+                    // // Stream the message character by character
+                    // let index = 0;
+                    // const streamInterval = setInterval(() => {
+                    //     if (index < message.length) {
+                    //         content.textContent += message[index];
+                    //         messagesDiv.scrollTop = messagesDiv.scrollHeight;
+                    //         index++;
+                    //     } else {
+                    //         clearInterval(streamInterval);
+                    //         messageInput.value = "";
+                    //         currentStreamMessage = null;
+                    //     }
+                    // }, 0); // Send each character every 100ms
+                }
+            }
+
+            sendButton.addEventListener("click", sendMessage);
+            messageInput.addEventListener("keypress", (e) => {
+                if (e.key === "Enter") {
+                    sendMessage();
+                }
+            });
+
+            connect();
+        </script>
+    </body>
+</html>
