@@ -14,21 +14,14 @@ TEST_CONFIG = {
     "test_data_dir": "test_data",
     "mock_agent_registry": "mock_agent_registry.yml",
     "default_timeout": 30,
-    "test_ports": {
-        "start": 9000,
-        "end": 9099
-    }
+    "test_ports": {"start": 9000, "end": 9099},
 }
 
 # Import commonly used test utilities
 try:
     from .test_combine_prompt import TestCombinePrompt, TestCombinePromptExamples
 
-    __all__ = [
-        "TestCombinePrompt",
-        "TestCombinePromptExamples",
-        "TEST_CONFIG"
-    ]
+    __all__ = ["TestCombinePrompt", "TestCombinePromptExamples", "TEST_CONFIG"]
 except ImportError:
     # Handle case where test modules are not yet available
     __all__ = ["TEST_CONFIG"]

@@ -1,10 +1,11 @@
 import colorsys
 import hashlib
-import sys
 from datetime import datetime
 from pathlib import Path
-from app.specs import MAX_RESPONSE_TOKENS
+
 import yaml
+
+from app.core.provider import MAX_RESPONSE_TOKENS
 
 today = datetime.now().strftime("%B %d, %Y")
 
@@ -29,24 +30,20 @@ def combine_prompt(registry_meta, agent_config):
 
     # Add registry meta prompt and patterns
     if registry_meta:
-        if "prompt" in registry_meta:
-            the_prompt.append(registry_meta["prompt"])
-
-        if "patterns" in registry_meta:
-            # Format patterns with available variables, handle formatting errors
-            formatted_pattern = registry_meta["patterns"].format(
-                TODAY=today, MAX_RESPONSE_TOKENS=MAX_RESPONSE_TOKENS
-            )
-            the_prompt.append(formatted_pattern)
+        meta_prompt = registry_meta["prompt"].format(
+            TODAY=today, MAX_RESPONSE_TOKENS=MAX_RESPONSE_TOKENS
+        )
+        the_prompt.append(meta_prompt)
 
     # Join all parts with double newlines
     combined_prompt = "".join(the_prompt)
+    print(combined_prompt)
     return combined_prompt
 
 
 def load_agent_registry() -> dict:
     """Load the agent registry YAML file."""
-    registry_path = Path(__file__).parent.parent / "app" / "agent_registry.yml"
+    registry_path = Path(__file__).parent.parent / "agents.yml"
     with open(registry_path) as f:
         return yaml.safe_load(f)
 

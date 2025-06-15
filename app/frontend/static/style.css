@@ -94,3 +94,74 @@ body {
     white-space: pre-wrap;
     font-family: monospace;
 }
+
+/* Markdown styles within message content */
+.content h1, .content h2, .content h3, .content h4, .content h5, .content h6 {
+    margin: 10px 0 5px 0;
+    font-weight: bold;
+}
+
+.content h1 { font-size: 1.4em; }
+.content h2 { font-size: 1.3em; }
+.content h3 { font-size: 1.2em; }
+.content h4 { font-size: 1.1em; }
+
+.content p {
+    margin: 8px 0;
+    line-height: 1.4;
+}
+
+.content ul, .content ol {
+    margin: 8px 0;
+    padding-left: 20px;
+}
+
+.content li {
+    margin: 4px 0;
+}
+
+.content blockquote {
+    border-left: 3px solid #ccc;
+    margin: 8px 0;
+    padding-left: 12px;
+    font-style: italic;
+    color: #666;
+}
+
+.content code {
+    background-color: rgba(0, 0, 0, 0.1);
+    padding: 2px 4px;
+    border-radius: 3px;
+    font-family: 'Courier New', monospace;
+    font-size: 0.9em;
+}
+
+.content pre {
+    background-color: rgba(0, 0, 0, 0.1);
+    padding: 12px;
+    border-radius: 4px;
+    overflow-x: auto;
+    margin: 8px 0;
+}
+
+.content pre code {
+    background-color: transparent;
+    padding: 0;
+}
+
+.content strong {
+    font-weight: bold;
+}
+
+.content em {
+    font-style: italic;
+}
+
+.content a {
+    color: #2196f3;
+    text-decoration: none;
+}
+
+.content a:hover {
+    text-decoration: underline;
+}

@@ -9,8 +9,8 @@ from fastapi.responses import HTMLResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 
-from app.models import ChatMessage
-from app.specs import REDIS_CHANNEL, publish_to_redis, redis_client
+from app.core.models import ChatMessage
+from app.core.redis import REDIS_CHANNEL, publish_to_redis, redis_client
 
 load_dotenv()
 

@@ -1,12 +1,87 @@
 meta:
+  # prompt: |
+  #   # You are an assistant who communicates in a natural, conversational chat style.
+  #   # Respond as if you're chatting with someone in real-time.
+  #   # Speak casually and concisely, but always push the conversation forward.
+
   prompt: |
-    You are an assistant who communicates in a natural, conversational chat style.
-    Respond as if you're chatting with someone in real-time.
-  # Never mention being a language model or AI assistent.
-  # Speak briefly like in a chat.
-  patterns: |
-    Today's date is {TODAY}.
-    Keep your reply concise — no more than {MAX_RESPONSE_TOKENS} tokens.
+    You are taking part in a structured, turn-based debate between two fictional agents.
+
+    ## Agents
+
+    **Dominique**
+    - Logical, analytical
+    - Sticks to measurable outcomes and data-driven conclusions
+    - Always speaks in clear, grounded language
+
+    **Joseph**
+    - Creative, poetic
+    - Uses metaphor and philosophical flair
+    - Avoids numbers unless necessary
+
+    ## Rules
+
+    - Agents must speak only on their assigned turn
+    - They MUST end their turn with: `>> [Next Agent], it is your turn.`
+    - The simulation must not continue unless that handoff is made
+    - Do NOT impersonate other agents
+    - Do NOT write for more than one agent per turn
+
+    ## Debate Topic
+
+    **"Can green energy fully replace fossil fuels by 2045?"**
+
+    ## Turn Order
+
+    1. Dominique
+    2. Joseph
+    3. Dominique
+    4. Joseph
+    (Then end)
+
+    ## Begin
+
+    ---
+
+    **[Dominique]:**
+    *Writes her response, staying in character and tone.*
+    Ends with: `>> Joseph, it is your turn.`
+
+    You are only one agent, the one I definied in here:
+  # prompt: |
+  #   ## context
+  #   This is a collaborative conversation between multiple autonomous agents.
+  #   Each agent has a unique role and personality, but they all work toward solving problems together.
+  #   Conversations are goal-driven, structured, and time-sensitive.
+
+  #   ## chat behavior
+  #   - Be concise. Each response should be clear and no longer than {MAX_RESPONSE_TOKENS} tokens.
+  #   - Speak in a natural, conversational tone, as if chatting with colleagues in real time.
+  #   - Avoid filler phrases like “Let’s begin”, “I agree”, or “Let’s do it” unless they carry new intent.
+  #   - Do not repeat the same phrase or sentiment more than once in a short window.
+  #   - Avoid motivational or redundant statements unless contextually relevant.
+  #   - Use first names when replying to other agents to maintain clarity and realism.
+
+  #   ## turn-taking
+  #   - Only respond if you have something meaningful to add or if directly addressed.
+  #   - If another agent asks a question or assigns you a task, prioritize responding to that.
+  #   - Avoid dominating the conversation. Wait for others when needed.
+
+  #   ## topical flow
+  #   - You do not need to define the topic. The topic will emerge from the conversation or be injected externally.
+  #   - Once a topic is established (e.g., by another agent or system message), focus all responses on contributing to that topic.
+  #   - Ask clarifying questions or build upon others’ contributions.
+  #   - Stay on-topic. If the topic shifts, follow the new context deliberately.
+
+  #   ## roles example:
+  #   - Rebel: Often acts as a facilitator or coordinator. May set topics or redirect the group.
+  #   - Dominique: Observational and detail-oriented. Tends to raise edge cases or concerns.
+  #   - Joseph: Solution-focused. Tends to evaluate feasibility and offer concrete proposals.
+
+  #   ## system info
+  #   Today's date is {TODAY}.
+  #   All agents are operating in real-time chat format.
+  #   Tone should be casual but productive.
 
 agents:
   dominique:
@@ -17,6 +92,8 @@ agents:
     #   -
     system_prompt: |
       You are Dominique.
+      You are a developer frustrated with legacy code. Your job is to identify specific pain points in the codebase, one at a time, and explain why they matter.
+
     # Keep your answers short, concise and insightful;
     # role: Philosophical Strategist and Cultural Critic
     # personality:
@@ -33,6 +110,8 @@ agents:
     active: true
     system_prompt: |
       You are Joseph.
+      You are a pragmatic senior engineer. Dominique is naming legacy code issues. You suggest realistic refactoring strategies in response, one per issue.
+
     # Keep your answers short, thoughtful and grounded.
     # role: Ethical Technologist and Reflective Critic
     # personality:
@@ -45,9 +124,10 @@ agents:
 
   giulio:
     name: Giulio
-    active: true
+    active: false
     system_prompt: |
       You are Giulio.
+
     # Keep your answers short, thoughtful and grounded.
     # fnever mention being a language model or AI.
     #   - Speak briefly and clearly, no more than 2 sentences per reply
@@ -62,7 +142,7 @@ agents:
 
   ada:
     name: Ada
-    active: true
+    active: false
     system_prompt: |
       You are Ada.
     # Keep your answers concise, precise, and insightful.
@@ -79,7 +159,7 @@ agents:
 
   crispin:
     name: Crispin
-    active: true
+    active: false
     system_prompt: |
       You are Crispin.
 

@@ -9,6 +9,7 @@
             rel="stylesheet"
             href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
         />
+        <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
     </head>
     <body>
         <div class="message-container">
@@ -62,22 +63,22 @@
                                 };
                                 messagesDiv.innerHTML += `<div class="message ${data.type}" style="background-color: ${data.color};" id="current-stream"><div class="sender">${data.sender}</div><div class="content"></div></div>`;
                             }
-                            document.querySelector(
-                                "#current-stream .content",
-                            ).textContent += data.content;
+                            const currentContent = document.querySelector("#current-stream .content");
+                            currentStreamMessage.content += data.content;
+                            currentContent.innerHTML = marked.parse(currentStreamMessage.content);
                         } else {
                             console.log(data);
                             const messageClass =
                                 data.sender == "Agent Rebel"
                                     ? "main"
                                     : "random";
-                            messagesDiv.innerHTML += `<div class="${data.type} ${messageClass}" style="background-color: ${data.color};"><div class="sender">${data.sender}</div><div class="content">${data.content}</div></div>`;
+                            messagesDiv.innerHTML += `<div class="${data.type} ${messageClass}" style="background-color: ${data.color};"><div class="sender">${data.sender}</div><div class="content">${marked.parse(data.content)}</div></div>`;
                         }
 
                         // Scroll to the bottom
                         messagesDiv.scrollTop = messagesDiv.scrollHeight;
                     } catch {
-                        messagesDiv.innerHTML += `<div class="message system"><div class="sender">System</div><div class="content">${event.data}</div></div>`;
+                        messagesDiv.innerHTML += `<div class="message system"><div class="sender">System</div><div class="content">${marked.parse(event.data)}</div></div>`;
                         messagesDiv.scrollTop = messagesDiv.scrollHeight;
                     }
                 };

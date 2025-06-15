@@ -3,7 +3,16 @@ from typing import Literal
 
 from pydantic import BaseModel, Field
 
-from app.utils import name_to_pastel_hex
+from app.core.utils import name_to_pastel_hex
+
+
+class ChatRequest(BaseModel):
+    message: str
+
+
+class ChatResponse(BaseModel):
+    response: str
+    agent_name: str
 
 
 class Message(BaseModel):

@@ -1,0 +1,39 @@
+{
+  "file_scan_exclusions": [
+    "**/__pycache__",
+    "**/*.pyc",
+    "**/*.pyo",
+    "**/.pytest_cache",
+    "**/build",
+    "**/dist",
+    "**/*.egg-info",
+    "**/.coverage",
+    "**/.tox",
+    "**/.mypy_cache",
+    "**/.ruff_cache",
+    "**/__trash__",
+    "**/.DS_Store"
+  ],
+  "project_panel": {
+    "file_icons": true,
+    "git_status": true,
+    "indent_size": 20,
+    "auto_reveal_entries": false
+  },
+  "outline_panel": {
+    "auto_fold_dirs": true
+  },
+  "git": {
+    "git_gutter": "tracked_files"
+  },
+  "formatter": "language_server",
+  "format_on_save": "on",
+  "show_whitespaces": "selection",
+  "relative_line_numbers": false,
+  "vim_mode": false,
+  "theme": {
+    "mode": "system",
+    "light": "One Light",
+    "dark": "One Dark"
+  }
+}

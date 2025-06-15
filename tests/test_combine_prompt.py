@@ -11,7 +11,7 @@ from pathlib import Path
 # Add parent directory to path
 sys.path.append(str(Path(__file__).parent.parent))
 
-from app.utils import combine_prompt, load_agent_registry
+from app.core.utils import combine_prompt, load_agent_registry
 
 
 class TestCombinePrompt(unittest.TestCase):
@@ -61,7 +61,7 @@ class TestCombinePrompt(unittest.TestCase):
                 break
 
         _combined = combine_prompt(registry_meta, test_agent)
-        #print(combined)
+        # print(combined)
 
         # Simple check - if patterns exist, tokens should be formatted
         if registry_meta.get("patterns"):
@@ -85,7 +85,6 @@ class TestCombinePrompt(unittest.TestCase):
             "Today is" in result or "{today}" not in result,
             "Today's date not properly formatted in result",
         )
-
 
     def test_all_active_agents(self):
         """Test combine_prompt works for all active agents."""
