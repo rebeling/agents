@@ -13,10 +13,10 @@ async def list_chat_topics() -> list[str]:
     """
     try:
         # Get all keys that match the chat pattern
-        chat_keys = await redis_client.keys("chat-*")
+        chat_keys = await redis_client.keys("*-chat-*")
 
         # Also get history keys to find topics with stored messages
-        history_keys = await redis_client.keys("chat-*_history")
+        history_keys = await redis_client.keys("*-chat-*_history")
 
         # Extract base topic names
         topics = set()
