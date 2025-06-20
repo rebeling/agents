@@ -21,10 +21,10 @@ model_name_sanitized = (
     config("MODEL_NAME", default="unknown").replace("/", "-").replace(":", "-")
 )
 
-import random
-ra = random.randint(1, 5000)
+# import random
+# ra = random.randint(1, 5000)
 
-REDIS_CHANNEL = f"{ra}-chat-{today}-{model_name_sanitized}"
+REDIS_CHANNEL = f"chat-{today}-{model_name_sanitized}"
 
 
 class RedisHandler:
@@ -62,7 +62,7 @@ class RedisHandler:
             f"{sender}: {content}" if "content" in chat_message else content
         )
 
-        msg = msg_to_process[:60] + '...' if len(msg_to_process) > 60 else ''
+        msg = msg_to_process[:60] + "..." if len(msg_to_process) > 60 else ""
         print(f"📥 [{self.agent_name}] Received from {sender}: {msg}")
 
         response = await agent_call_func(msg_to_process)
@@ -116,6 +116,7 @@ class RedisHandler:
                 print(f"Invalid message format in Redis: {e}")
 
         return messages
+
 
 
 async def publish_to_redis(msg):
