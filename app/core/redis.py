@@ -118,7 +118,6 @@ class RedisHandler:
         return messages
 
 
-
 async def publish_to_redis(msg):
     """Publish a chat message to Redis channel."""
     try:

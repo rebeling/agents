@@ -4,23 +4,11 @@ import multiprocessing
 import signal
 import sys
 import time
-from datetime import datetime
-from pathlib import Path
 
 import uvicorn
-import yaml
 from fastapi import FastAPI
 
-from app.core.provider import MAX_RESPONSE_TOKENS
-
-today = datetime.now().strftime("%B %d, %Y")
-
-
-def load_agent_registry() -> dict:
-    """Load the agent registry YAML file."""
-    registry_path = Path(__file__).parent.parent / "agents.yml"
-    with open(registry_path) as f:
-        return yaml.safe_load(f)
+from app.core.utils import combine_prompt, load_agent_registry
 
 
 def get_active_agents(registry: dict) -> list[dict]:
@@ -36,36 +24,6 @@ def get_active_agents(registry: dict) -> list[dict]:
                 }
                 active_agents.append(agent_data)
     return active_agents
-
-
-def combine_prompt(registry_meta, agent_config):
-    """
-    Combine registry meta information with agent configuration to create a complete prompt.
-
-    Args:
-        registry_meta: Meta configuration from agent registry (contains prompt and patterns)
-        agent_config: Individual agent configuration (contains system_prompt, meta_prompt, patterns)
-
-    Returns:
-        str: Combined prompt string
-    """
-    the_prompt = []
-
-    # Add the main system prompt
-    system_prompt = agent_config["system_prompt"]
-    the_prompt.append(system_prompt)
-
-    # Add registry meta prompt and patterns
-    if registry_meta:
-        meta_prompt = registry_meta["prompt"].format(
-            TODAY=today, MAX_RESPONSE_TOKENS=MAX_RESPONSE_TOKENS
-        )
-        the_prompt.append(meta_prompt)
-
-    # Join all parts
-    combined_prompt = "".join(the_prompt)
-    print(combined_prompt)
-    return combined_prompt
 
 
 def create_agent_app(agent_config: dict) -> FastAPI:

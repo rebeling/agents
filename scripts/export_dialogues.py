@@ -4,7 +4,7 @@
 import asyncio
 from pathlib import Path
 
-from app.core.redis_export import list_chat_topics, export_topic_to_markdown
+from app.core.redis_export import export_topic_to_markdown, list_chat_topics
 
 
 async def export_all_dialogues():
@@ -12,16 +12,16 @@ async def export_all_dialogues():
     topics = await list_chat_topics()
     export_dir = Path("agent-dialogues")
     export_dir.mkdir(exist_ok=True)
-    
+
     for topic in topics:
         markdown_content = await export_topic_to_markdown(topic)
         file_path = export_dir / f"{topic}.md"
-        
+
         with open(file_path, "w") as f:
             f.write(markdown_content)
-        
+
         print(f"Exported {topic} to {file_path}")
-    
+
     print(f"Exported {len(topics)} topics to {export_dir}")
 
 
