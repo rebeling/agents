@@ -97,35 +97,8 @@
                             role: "user",
                         }),
                     );
-
                     messageInput.value = "";
                     currentStreamMessage = null;
-
-                    // Create a new message bubble
-                    // currentStreamMessage = document.createElement("div");
-                    // currentStreamMessage.className = "message main";
-                    // const sender = document.createElement("div");
-                    // sender.className = "sender";
-                    // sender.textContent = "You";
-                    // const content = document.createElement("div");
-                    // content.className = "content";
-                    // currentStreamMessage.appendChild(sender);
-                    // currentStreamMessage.appendChild(content);
-                    // messagesDiv.appendChild(currentStreamMessage);
-
-                    // // Stream the message character by character
-                    // let index = 0;
-                    // const streamInterval = setInterval(() => {
-                    //     if (index < message.length) {
-                    //         content.textContent += message[index];
-                    //         messagesDiv.scrollTop = messagesDiv.scrollHeight;
-                    //         index++;
-                    //     } else {
-                    //         clearInterval(streamInterval);
-                    //         messageInput.value = "";
-                    //         currentStreamMessage = null;
-                    //     }
-                    // }, 0); // Send each character every 100ms
                 }
             }
 
