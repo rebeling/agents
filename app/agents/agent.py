@@ -4,10 +4,10 @@ from contextlib import asynccontextmanager
 from fastapi import FastAPI
 from pydantic_ai import Agent
 
+from app.agents.agent_info import get_a2a_params
+from app.agents.routes import add_agent_routes
 from app.core.provider import agent_model, model_settings
 from app.core.redis import REDIS_CHANNEL, RedisHandler
-from app.agents.info import get_a2a_params
-from app.agents.routes import add_agent_routes
 
 
 class FastAgent:
@@ -23,7 +23,13 @@ class FastAgent:
         self.redis_handler = RedisHandler(
             self.name, self.redis_channel, self.redis_history
         )
-        self.app = FastAPI(lifespan=self._lifespan)
+        tags_metadata = [
+            {
+                "name": "chat",
+                "description": "Chat currently pub sub not working independently.",
+            }
+        ]
+        self.app = FastAPI(lifespan=self._lifespan, openapi_tags=tags_metadata)
 
         add_agent_routes(
             self.app,

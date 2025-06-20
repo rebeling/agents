@@ -4,11 +4,11 @@ import multiprocessing
 import signal
 import sys
 import time
-import yaml
 from datetime import datetime
 from pathlib import Path
 
 import uvicorn
+import yaml
 from fastapi import FastAPI
 
 from app.core.provider import MAX_RESPONSE_TOKENS

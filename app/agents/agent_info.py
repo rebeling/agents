@@ -1,6 +1,7 @@
 """Agent information gathering utilities using pydantic-ai FastA2A standards."""
 
-from fasta2a.schema import AgentCard, Capabilities, Authentication
+from fasta2a.schema import AgentCard, Authentication, Capabilities
+
 from app.core.provider import agent_model, model_settings
 
 

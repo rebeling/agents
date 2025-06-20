@@ -1,5 +1,7 @@
 from decouple import config
+from pydantic_ai.models.anthropic import AnthropicModel
 from pydantic_ai.models.openai import OpenAIModel
+from pydantic_ai.providers.anthropic import AnthropicProvider
 from pydantic_ai.providers.openai import OpenAIProvider
 from pydantic_ai.providers.openrouter import OpenRouterProvider
 
@@ -23,19 +25,14 @@ openrouter_model = OpenAIModel(
     model_name=model_name,
     provider=OpenRouterProvider(api_key=config("OPENROUTER_API_KEY")),
 )
-#agent_model = openrouter_model
+# agent_model = openrouter_model
 
 
-from pydantic_ai.models.anthropic import AnthropicModel
-from pydantic_ai.providers.anthropic import AnthropicProvider
-
-
-claude_model = 'claude-3-5-sonnet-latest'
-#claude_model = 'claude-3-haiku-20240307'
+claude_model = "claude-3-5-sonnet-latest"
+# claude_model = 'claude-3-haiku-20240307'
 
 anthropic_model = AnthropicModel(
-    claude_model,
-    provider=AnthropicProvider(api_key=config("ANTHROPIC_API_KEY"))
+    claude_model, provider=AnthropicProvider(api_key=config("ANTHROPIC_API_KEY"))
 )
 agent_model = anthropic_model
 

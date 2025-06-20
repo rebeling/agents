@@ -1,8 +1,9 @@
 """API route handlers for FastAgent."""
 
 from fastapi import FastAPI
+
+from app.agents.agent_info import create_agent_card, get_agent_info
 from app.core.models import ChatRequest, ChatResponse
-from app.agents.info import get_agent_info, create_agent_card
 
 
 def add_agent_routes(
@@ -18,7 +19,7 @@ def add_agent_routes(
     async def agent_info():
         return get_agent_info(agent_name, system_prompt, redis_channel)
 
-    @app.post("/chat", response_model=ChatResponse)
+    @app.post("/chat", response_model=ChatResponse, tags=["chat"])
     async def chat_with_agent(request: ChatRequest):
         try:
             response = await agent_run_func(request.message)
