@@ -33,7 +33,7 @@ This is a Redis pub/sub based multi-agent conversation system using pydantic-ai.
 - Only agents marked `active: true` are started
 
 **Agent Architecture**
-- `FastAgent` class (`app/agent_base.py`) wraps pydantic-ai agents with FastAPI
+- `FastAgent` class (`app/agents/agent.py`) wraps pydantic-ai agents with FastAPI
 - Each agent runs on separate port (8001+) and listens to shared Redis channel
 - Agents respond only when message sender != their own name
 - Message history stored in Redis lists as ModelMessages JSON
@@ -43,24 +43,33 @@ This is a Redis pub/sub based multi-agent conversation system using pydantic-ai.
 User → WebSocket (port 7999) → Redis pub/sub → Active Agents → LLM → Redis → WebSocket → User
 ```
 
-**Model Configuration (`app/provider.py`)**
-- Supports OpenRouter API (current) and local Ollama
+**Model Configuration (`app/core/provider.py`)**
+- Supports Anthropic Claude (current), OpenRouter API, and local Ollama
 - Model settings include token limits (currently 100 max tokens)
 - Channel names auto-generated: `chat-{date}-{sanitized-model-name}`
 
 **Data Storage**
 - Real-time messages: Redis pub/sub channels
 - History: Redis lists (`{channel}_history`) containing pydantic-ai ModelMessages
-- Export: `app/dialogues.py` provides functions to list topics, get messages, export to markdown
+- Export: `app/core/redis_export.py` provides functions to list topics, get messages, export to markdown
 
 ### Key Files
-- `app/specs.py` - Redis configuration and connection
+- `app/core/redis.py` - Redis configuration, connection, and core handler
+- `app/core/redis_export.py` - Chat export utilities (separated from core Redis)
 - `app/chat_server.py` - Main web interface with WebSocket
-- `app/helpers/dialogues.py` - Chat export utilities
+- `app/core/registry.py` - Agent registry loading and process management
+- `app/core/utils.py` - Shared utilities (YAML loading, prompt combination)
 - `app/dynamic_agent_starter.py` - Multi-process agent launcher
 - `export_dialogues.py` - Batch export all chats to `agent-dialogues/` folder
 
 ### Environment Requirements
 - Redis server running on localhost:6379
-- `OPENROUTER_API_KEY` environment variable for LLM access
+- `ANTHROPIC_API_KEY` environment variable for Claude access (current default)
+- `OPENROUTER_API_KEY` environment variable for OpenRouter LLM access (optional)
 - Python 3.11+ with uv package manager
+
+### Recent Simplifications
+- Consolidated `app/helpers/` directory into `app/core/redis_export.py` 
+- Removed duplicate utility functions between `registry.py` and `utils.py`
+- Split Redis functionality: core operations in `redis.py`, export utilities in `redis_export.py`
+- Reduced codebase from 1,200+ lines to ~800 lines while maintaining all functionality
